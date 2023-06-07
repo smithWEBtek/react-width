@@ -1,21 +1,31 @@
 import ButtonWithTooltip from "./ButtonWithTooltip.js";
 import Dropdown from "./Dropdown.js";
 
-const selections1 = [
-  "a very very very very very very long select option",
-  "a very long select option",
-  "cat",
-  "fish",
-  "snake",
-  "vegetarian",
-];
-const selections2 = [
-  '43degrees',
-  '20',
-  'cat'
+const selections = [
+  [
+    "a very very very very very very long select option",
+    "a very long select option",
+    "cat",
+    "fish",
+    "snake",
+    "vegetarian",
+  ],
+  ["43degrees", "20", "cat"],
+  ["x", "y", "z"],
 ];
 
 export default function App() {
+  const selectionDropdowns = selections.map((selectionGroup, i) => {
+    return (
+      <div key={i}>
+        <Dropdown selections={selectionGroup} />
+        <br />
+        <br />
+        <br />
+      </div>
+    );
+  });
+
   return (
     <div>
       <ButtonWithTooltip
@@ -41,22 +51,13 @@ export default function App() {
       >
         Hover over me (tooltip below)
       </ButtonWithTooltip>
+      <hr />
       <br />
       <br />
       <br />
       <br />
-      <label>selection1</label>
-      <br />
-      <Dropdown selections={selections1} />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <label>selection2</label>
-      <br />
-      <Dropdown selections={selections2} />
+      <h2>Unique widths for unique selection groups</h2>
+      {selectionDropdowns}
       <br />
     </div>
   );
