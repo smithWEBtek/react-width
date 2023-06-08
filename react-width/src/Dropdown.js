@@ -1,38 +1,56 @@
-import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { FormControl, Select, MenuItem } from "@mui/material";
 import { createStyles, makeStyles } from "@mui/styles";
 
-const useStyles = makeStyles((styleProps) =>
+// const useStyles = makeStyles((styleProps) =>
+const useStyles = makeStyles(() =>
   createStyles({
     formControl: {
-      outline: "1px solid red",
       backgroundColor: "white",
+      // margin: "8px 0",
       verticalAlign: "middle",
       // width: (styleProps) => styleProps.width,
       "& svg": {
         right: "-2px",
-      },
+      }
     },
+    // menuItem: {
+    //   outline: '1px solid red'
+    // }
   })
 );
 
 const Dropdown = ({ selections }) => {
-  const ref = useRef(null);
   const [selection, setSelection] = useState("");
-  const maxSelectionLength = Math.max(...selections.map(s => s.length))
-  const widthFactor = maxSelectionLength < 51 ? 8 : 1;
-  const [dropdownWidth, setDropdownWidth] = useState(maxSelectionLength + widthFactor);
-  const styleProps = {width: dropdownWidth};
-  const classes = useStyles(styleProps);
+  const [dropdownWidth, setDropdownWidth] = useState(0);
+
+  const selectionWidths = selections.map((selection) => selection.length);
+  const maxSelectionWidth = Math.max(...selectionWidths);
+  const maxSelectionWidthIndex = selectionWidths.indexOf(maxSelectionWidth);
+  const [widestSelection, setWidestSelection] = useState(selections[maxSelectionWidthIndex]);
+
+  // const styleProps = { width: dropdownWidth };
+  // const classes = useStyles(styleProps);
+  const classes = useStyles();
 
   const handleDropdownSelect = (event) => {
     event.preventDefault();
     setSelection(event.target.value);
   };
 
-  useLayoutEffect(() => {
-    const { width } = ref.current.getBoundingClientRect();
-    setDropdownWidth(width * widthFactor);
+  useEffect(() => {
+
+    const getTextWidth = (text, font) => {
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
+      context.font = font || getComputedStyle(document.body).font;
+      const calculatedWidth = context.measureText(text).width;
+      console.log('calculatedWidth', calculatedWidth);
+      return calculatedWidth + 62;
+    };
+    
+    setDropdownWidth(getTextWidth(widestSelection, null));
+    setWidestSelection(selections[maxSelectionWidthIndex]);
   }, []);
 
   const selectOptions = selections.map((sel, index) => {
@@ -41,6 +59,7 @@ const Dropdown = ({ selections }) => {
         key={`${sel}-${index}`}
         value={sel}
         // id={tile.id}
+        // className={classes.menuItem}
       >
         {sel}
       </MenuItem>
@@ -49,10 +68,9 @@ const Dropdown = ({ selections }) => {
 
   return (
     <FormControl
-      ref={ref}
+      style={{ width: dropdownWidth }}
       required
-      className={`${classes.formControl}`}
-      style={{ width: dropdownWidth}}
+      // className={classes.formControl}
       variant="outlined"
     >
       <Select

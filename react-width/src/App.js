@@ -4,6 +4,7 @@ import Dropdown from "./Dropdown.js";
 const selections = [
   [
     "a very very very very very very long select option",
+    "a very very very very very very long select option which is really very much significantly a lot longer",
     "a very long select option",
     "cat",
     "fish",
