@@ -1,16 +1,11 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
 import { FormControl, Select, MenuItem } from "@mui/material";
-
 import { createStyles, makeStyles } from "@mui/styles";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-// const useStyles = makeStyles((theme: Theme) =>
 const useStyles = makeStyles((styleProps) =>
   createStyles({
     formControl: {
-      outline: "1px solid red",
       backgroundColor: "white",
-      // margin: "8px 0",
       verticalAlign: "middle",
       // width: (styleProps) => styleProps.width,
       "& svg": {
@@ -25,7 +20,7 @@ const Dropdown = ({ selections }) => {
   const [selection, setSelection] = useState("");
   const maxSelectionLength = Math.max(...selections.map(s => s.length))
   const widthFactor = maxSelectionLength < 51 ? 8 : 1;
-  // const [dropdownWidth, setDropdownWidth] = useState(maxSelectionLength + widthFactor);
+  const [dropdownWidth, setDropdownWidth] = useState(maxSelectionLength + widthFactor);
   const styleProps = {width: dropdownWidth};
   const classes = useStyles(styleProps);
 
@@ -38,11 +33,6 @@ const Dropdown = ({ selections }) => {
     const { width } = ref.current.getBoundingClientRect();
     setDropdownWidth(width * widthFactor);
   }, []);
-
-  // useEffect(() =>{
-  //   const { width } = ref.current.getBoundingClientRect();
-  //   setDropdownWidth(width * 7);
-  // },[]);
 
   const selectOptions = selections.map((sel, index) => {
     return (
@@ -70,9 +60,6 @@ const Dropdown = ({ selections }) => {
         data-testid="answer-select"
         value={selection}
         onChange={handleDropdownSelect}
-        // className={
-        //   minHeight !== "auto" ? `${classes.fractionSelectionHeight}` : null
-        // }
       >
         {selectOptions}
       </Select>
